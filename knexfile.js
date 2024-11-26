@@ -1,15 +1,19 @@
 import "dotenv/config";
-// Update with your config settings.
+import knex from "knex";
 
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
-export default {
+
+const knexConfig = {
   client: 'mysql2',
   connection: {
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-  }
+  },
 };
+
+
+export const db = knex(knexConfig);
+
+
+
