@@ -44,14 +44,16 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     // Check if the user exists
-    const user = await db('users')
+    const users = await db('users')
       .select('*')
-      .where('username', req.body.username)
-      .first();
+      .where('username', req.body.username);
 
-    if (!user) {
+    if (users.length === 0) {
       return res.status(404).json("User not found!");
     }
+
+    // Get the first user from the array (assuming the username is unique)
+    const user = users[0];
 
     // Verify password
     const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.password);
