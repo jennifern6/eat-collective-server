@@ -1,34 +1,82 @@
-import { db } from "../knexfile.js";
-import bcrypt from "bcryptjs";
+import initKnex from 'knex';
+import "dotenv/config";  
+import configuration from '../knexfile.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-export const register = (req, res) => {
-  // Check for existing user
-  const q = "SELECT * FROM users WHERE email = ? OR username = ?";
 
-  db.query(q, [req.body.email, req.body.username], (err, data) => {
-    if (err) return res.status(500).json({ error: "Database query error", details: err });
-    if (data.length) return res.status(409).json({ message: "User already exists" });
+const db = initKnex(configuration);
 
-    // Hash password and create a new user
+
+
+//register section 
+export const register = async (req, res) => {
+  try {
+    // Check for existing user
+    const existingUser = await db('users')
+      .select('*')
+      .where('email', req.body.email)
+      .orWhere('username', req.body.username)
+      .first();
+
+    if (existingUser) {
+      return res.status(409).json("User already exists!");
+    }
+
+    // Hash the password and create a new user
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 
-    const insertQuery = "INSERT INTO users(`username`, `email`, `password`) VALUES (?)";
-    const values = [req.body.username, req.body.email, hash];
-
-    db.query(insertQuery, [values], (err, result) => {
-      if (err) return res.status(500).json({ error: "Failed to create user", details: err });
-      return res.status(201).json({ message: "User has been created successfully" });
+    await db('users').insert({
+      username: req.body.username,
+      email: req.body.email,
+      password: hash,
     });
-  });
+
+    return res.status(200).json("User has been created.");
+  } catch (err) {
+    return res.status(500).json(err);
+  }
 };
 
-export const login = (req, res) => {
-  // Implement login functionality here
-  res.status(501).json({ message: "Login functionality not implemented yet" });
+
+//login section
+export const login = async (req, res) => {
+  try {
+    // Check if the user exists
+    const user = await db('users')
+      .select('*')
+      .where('username', req.body.username)
+      .first();
+
+    if (!user) {
+      return res.status(404).json("User not found!");
+    }
+
+    // Verify password
+    const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.password);
+
+    if (!isPasswordCorrect) {
+      return res.status(400).json("Wrong username or password!");
+    }
+
+    // Create JWT token
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "jwtkey");  // Replace "jwtkey" with your secret in production
+    const { password, ...other } = user;
+
+    res.cookie("access_token", token, {
+      httpOnly: true,
+    }).status(200).json(other);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
 };
 
+
+//logout section
 export const logout = (req, res) => {
-  // Implement logout functionality here
-  res.status(501).json({ message: "Logout functionality not implemented yet" });
+  res.clearCookie("access_token", {
+    sameSite: "none",
+    secure: true,
+  }).status(200).json("User has been logged out.");
 };
