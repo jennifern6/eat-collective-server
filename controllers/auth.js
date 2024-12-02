@@ -1,33 +1,28 @@
-import initKnex from 'knex';
-import "dotenv/config";  
-import configuration from '../knexfile.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
+import initKnex from "knex";
+import "dotenv/config";
+import configuration from "../knexfile.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const db = initKnex(configuration);
 
-
-
-//register section 
+//register section
 export const register = async (req, res) => {
   try {
-    // Check for existing user
-    const existingUser = await db('users')
-      .select('*')
-      .where('email', req.body.email)
-      .orWhere('username', req.body.username)
+    const existingUser = await db("users")
+      .select("*")
+      .where("email", req.body.email)
+      .orWhere("username", req.body.username)
       .first();
 
     if (existingUser) {
       return res.status(409).json("User already exists!");
     }
 
-    // Hash the password and create a new user
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 
-    await db('users').insert({
+    await db("users").insert({
       username: req.body.username,
       email: req.body.email,
       password: hash,
@@ -39,46 +34,48 @@ export const register = async (req, res) => {
   }
 };
 
-
 //login section
 export const login = async (req, res) => {
   try {
-    // Check if the user exists
-    const users = await db('users')
-      .select('*')
-      .where('username', req.body.username);
+    const users = await db("users")
+      .select("*")
+      .where("username", req.body.username);
 
     if (users.length === 0) {
       return res.status(404).json("User not found!");
     }
-
-    // Get the first user from the array (assuming the username is unique)
     const user = users[0];
 
-    // Verify password
-    const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.password);
+    const isPasswordCorrect = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
 
     if (!isPasswordCorrect) {
       return res.status(400).json("Wrong username or password!");
     }
 
-    // Create JWT token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "jwtkey");  // Replace "jwtkey" with your secret in production
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "jwtkey" ); 
     const { password, ...other } = user;
 
-    res.cookie("access_token", token, {
-      httpOnly: true,
-    }).status(200).json(other);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json(other);
   } catch (err) {
     return res.status(500).json(err);
   }
 };
 
-
 //logout section
 export const logout = (req, res) => {
-  res.clearCookie("access_token", {
-    sameSite: "none",
-    secure: true,
-  }).status(200).json("User has been logged out.");
+  res
+    .clearCookie("access_token", {
+      sameSite: "none",
+      secure: true,
+    })
+    .status(200)
+    .json("User has been logged out.");
 };

@@ -1,14 +1,14 @@
-import initKnex from 'knex';
-import jwt from 'jsonwebtoken';
+import initKnex from "knex";
+import jwt from "jsonwebtoken";
 import "dotenv/config";
-import configuration from '../knexfile.js';
+import configuration from "../knexfile.js";
 const db = initKnex(configuration);
 
 export const getPosts = async (req, res) => {
   try {
     const query = req.query.cat
-      ? db('posts').where('cat', req.query.cat)
-      : db('posts');
+      ? db("posts").where("cat", req.query.cat)
+      : db("posts");
 
     const data = await query;
     return res.status(200).json(data);
@@ -19,10 +19,19 @@ export const getPosts = async (req, res) => {
 
 export const getPost = async (req, res) => {
   try {
-    const data = await db('users')
-      .join('posts', 'users.id', 'posts.uid')
-      .select('posts.id', 'username', 'title', 'desc', 'posts.img', 'users.img as userImg', 'cat', 'date')
-      .where('posts.id', req.params.id)
+    const data = await db("users")
+      .join("posts", "users.id", "posts.uid")
+      .select(
+        "posts.id",
+        "username",
+        "title",
+        "desc",
+        "posts.img",
+        "users.img as userImg",
+        "cat",
+        "date"
+      )
+      .where("posts.id", req.params.id)
       .first();
 
     if (!data) {
@@ -42,7 +51,7 @@ export const addPost = async (req, res) => {
   try {
     const userInfo = jwt.verify(token, process.env.JWT_SECRET || "jwtkey");
 
-    const [postId] = await db('posts')
+    const [postId] = await db("posts")
       .insert({
         title: req.body.title,
         desc: req.body.desc,
@@ -51,7 +60,7 @@ export const addPost = async (req, res) => {
         date: req.body.date,
         uid: userInfo.id,
       })
-      .returning('id'); //
+      .returning("id"); //
 
     return res.status(201).json({ message: "Post has been created.", postId });
   } catch (err) {
@@ -66,7 +75,7 @@ export const deletePost = async (req, res) => {
   try {
     const userInfo = jwt.verify(token, process.env.JWT_SECRET || "jwtkey");
 
-    const deletedRows = await db('posts')
+    const deletedRows = await db("posts")
       .where({ id: req.params.id, uid: userInfo.id })
       .del();
 
@@ -87,7 +96,7 @@ export const updatePost = async (req, res) => {
   try {
     const userInfo = jwt.verify(token, process.env.JWT_SECRET || "jwtkey");
 
-    const updatedRows = await db('posts')
+    const updatedRows = await db("posts")
       .where({ id: req.params.id, uid: userInfo.id })
       .update({
         title: req.body.title,

@@ -1,4 +1,3 @@
-// Import dotenv to process environment variables from `.env` file.
 import "dotenv/config";
 
 export default {
@@ -11,6 +10,6 @@ export default {
     charset: "utf8",
   },
   migrations: {
-    directory: './migrations',  
+    directory: "./migrations",
   },
 };
