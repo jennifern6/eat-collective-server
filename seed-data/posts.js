@@ -86,6 +86,7 @@
 //   title: "Cheers to the Graduates",
 //   desc: "Celebrating the end of an incredible journey! As a Teaching Assistant for the Software Engineering program at BrainStation, I've had the chance to learn, grow, and support so many talented students eager to break into the tech world. This week marks the finish line, and I just want to say: Congratulations to everyone graduating! You did it, and I’m so proud of all your hard work. Here’s to new beginnings and amazing opportunities ahead! What’s next on your tech journey?",
 //   date: "2024-11-15 12:55:00",
+//   img: JSON.stringify({ filename: "1733237856326_technology - pizza.png" }),
 //   uid: 2, 
 //   cat: "technology",
 // },
