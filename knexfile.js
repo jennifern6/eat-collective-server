@@ -1,7 +1,11 @@
 import "dotenv/config";
 
+/**
+ * @type { Object.<string, import("knex").Knex.Config> }
+ */
+
 export default {
-  client: "mysql2",
+  client: 'mysql2', 
   connection: {
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
@@ -10,6 +14,12 @@ export default {
     charset: "utf8",
   },
   migrations: {
-    directory: "./migrations",
+    directory: './migrations' 
   },
+  seeds: {
+    directory: './seeds' 
+  }
 };
+
+
+
