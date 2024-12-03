@@ -15,3 +15,5 @@ export default [
     },
   ];
   
+
+  //successfully seeded 2 users
