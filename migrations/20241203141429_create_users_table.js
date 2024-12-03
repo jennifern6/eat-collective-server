@@ -20,3 +20,5 @@ export function up(knex) {
     return knex.schema.dropTable("users"); 
   }
   
+
+  //succcessfully migrated to MySQL workbench 
