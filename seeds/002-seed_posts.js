@@ -32,7 +32,7 @@ const postsData = [
     id: null,
     title: "Swinging into Sweetness: Golf, Cake & Connection",
     desc: "This year, I picked up golf, and wow—what a game-changer! Not only have I improved my swing (kind of), but I’ve also reconnected with old friends, met amazing new people, and even brought in fresh business opportunities. To celebrate, I made a homemade birthday cake decked out with golf-themed decorations—a sweet tribute to the sport that’s brought so much fun and connection into my life. Next on my bucket list? Golf travel! Scotland, Florida, Japan—watch out, here I come (eventually). Until then, it’s swings, sweet treats, and making memories on the green.",
-    img: JSON.stringify({ filename: "1733237869577_travel - cars.png" }),
+    img: JSON.stringify({ filename: "1733237874771_travel - golf cake.png" }),
     date: "2024-07-22 11:45:00",
     uid: 1,
     cat: "travel",
