@@ -106,7 +106,7 @@ const postsData = [
   title: "Cheers to the Graduates",
   desc: "<p>Celebrating the end of an incredible journey! </p><p><br></p><p>As a Teaching Assistant for the Software Engineering program at BrainStation, I\'ve had the chance to learn, grow, and support so many talented students eager to break into the tech world.</p><p><br></p><p>This week marks the finish line, and I just want to say: <em>Congratulations</em> to everyone graduating! You did it, and I’m so proud of all your hard work. Here’s to new beginnings and amazing opportunities ahead!</p><p><br></p><p>What’s next on your tech journey?</p>",
   img: JSON.stringify({ filename: "1733237847582_technology - cake.png" }),
-  date: "2024-11-15 12:55:00",
+  date: "2024-12-5 12:55:00",
   uid: 2, 
   cat: "technology",
 }
